@@ -1,5 +1,5 @@
 {
-  "name": "frak",
+  "name": "frak-js",
   "version": "0.1.0",
   "description": "Implementation of the Fetch API specifically for JSON based Web Service requests and responses",
   "main": "build/index.js",
