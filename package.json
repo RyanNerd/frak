@@ -1,0 +1,43 @@
+{
+  "name": "frak",
+  "version": "0.1.0",
+  "description": "Implementation of the Fetch API specifically for JSON based Web Service requests and responses",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel lib -d build",
+    "lint": "eslint lib/**; exit 0",
+    "lint:watch": "esw -w lib/**",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RyanNerd/frak.git"
+  },
+  "keywords": [
+    "fetch",
+    "json",
+    "ajax"
+  ],
+  "author": "Ryan Jentzsch",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RyanNerd/frak/issues"
+  },
+  "homepage": "https://github.com/RyanNerd/frak#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "eslint": "^4.11.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "eslint-watch": "^3.1.3",
+    "prop-types": "^15.6.0",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1"
+  }
+}
