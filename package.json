@@ -19,7 +19,7 @@
     "json",
     "ajax"
   ],
-  "author": "Ryan Jentzsch",
+  "author": "Ryan Jentzsch <ryan.jentzsch@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/RyanNerd/frak/issues"
