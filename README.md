@@ -1,4 +1,4 @@
-# Frak (frak-js)
+# Frak
 
 __An implementation of the [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) specifically for JSON based requests and responses__
 
@@ -9,7 +9,7 @@ Recommended is via NPM / YARN
 In your `package.json` for your app:
 
     {
-      "frak-js": "^0.1.6"
+      "frak": "^1.0.0"
     }
 
 Install with NPM or YARN:
@@ -23,7 +23,7 @@ Install with NPM or YARN:
 Here's a simple example of a GET request using Frak:
 
 ```ecmascript 6
-    import { Frak } from 'frak-js';
+    import { Frak } from 'frak';
     const frak = new Frak();
     
     getExample = (uri) => {
@@ -207,7 +207,7 @@ exception or error.
 You can make Frak behave more like Ajax by setting `throwErrorOnFailedStatus` to true:
 
 ```ecmascript 6
-    import { Frak } from 'frak-js';
+    import { Frak } from 'frak';
     const frak = new Frak({throwErrorOnFailedStatus: true});
 ```
 
@@ -233,7 +233,7 @@ Note: Frak works really well with the [Slim Framework](https://www.slimframework
 
 -----------
 
-Question: Why did you name this class library `frak-js` and not just `frak`?
+Question: Why did you name this class library `frak` and not just `frak`?
 
 Answer: `frak` at [NPM](https://www.npmjs.com/package/frak) is already taken 
 (although it appears to be 4 year old abandonware).
