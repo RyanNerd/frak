@@ -8,7 +8,7 @@ Recommended is via NPM / YARN
 
 In your `package.json` for your app:
 
-    {
+    "dependencies": {
       "frak": "^1.0.0"
     }
 
@@ -48,8 +48,8 @@ The constructor takes two optional arguments for the cases where you need Frak b
   /**
    * Constructor argument is a settings hash and can be undefined to use the defaults
    *
-   * @param {object | undefined} settings 
-   * @param {object | undefined} options
+   * @param {object} [settings] 
+   * @param {object} [options]
    */
   Frak(settings, options)
 
@@ -60,6 +60,7 @@ The constructor takes two optional arguments for the cases where you need Frak b
 | Property                 | Default   | Description                                                                |
 | --------                 | -------   | -----------                                                                |
 | throwErrorOnFailedStatus | false     | Set this to true if you want Frak to behave more like Jquery's Ajax        |
+| allowZeroLengthResponse  | false     | Set this to true for responses to **not** require a response body     |
 | requestDefaultHeaders    | see below | Headers to send for each HTTP method (see below)                           |
 | abort                    | null      | [Signal](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) |
 
@@ -82,7 +83,6 @@ The constructor takes two optional arguments for the cases where you need Frak b
 
 | Property | Default   | Description                             |
 | -------- | -------   | -----------                             |
-| cache    | 'default' | Use the default cache scheme            | 
 | mode     | 'cors'    | Cross-Origin Resource Sharing enabled   |
 | headers  | {}        | Headers to send with each request       |
 
@@ -91,7 +91,7 @@ any [Request property](https://developer.mozilla.org/en-US/docs/Web/API/Request)
 
 Frak supports all the standard [HTTP web methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods).
 
-Frak acts as a proxy to fetch() exposing methods matching the names of the HTTP web methods 
+Frak acts as a _proxy_ to fetch() exposing methods matching the names of the HTTP web methods 
 (with the exception of DELETE -- which is named `delete_` so JS doesn't pitch a fit).
 
 The common methods of GET, POST, PATCH, and PUT have an expectation that the response 'Content-Type' (if any)
@@ -99,6 +99,10 @@ will be 'application/json'. If there is a payload (response content body) that i
 then Frak will throw an error.
 
 Frak is implemented as a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises).
+For the common methods (GET, POST, PATCH and PUT) that have a return body -- Frak will return the JSON object as the promise response.
+If the return body is not valid JSON or another error occurs then the response can be caught as an error object.
+
+ 
 What follows are Frak's public methods and their signatures.
 
 **Methods**
@@ -114,7 +118,7 @@ Note: The optional `options` argument for all methods corresponds to
     * @returns {Promise} contains the response.body.json() object on success.
     */
     get(url, options)
-    
+
     /**
     * POST web method for the given url and body
     * @param {string} url The URL endpoint
@@ -123,7 +127,7 @@ Note: The optional `options` argument for all methods corresponds to
     * @returns {Promise} contains the response.body.json() object on success.
     */
     post(url, body, options)
-    
+
     /**
     * PATCH web method for the given url and body
     * @param {string} url - Endpoint for the request
@@ -132,7 +136,7 @@ Note: The optional `options` argument for all methods corresponds to
     * @returns {Promise} contains the response.body.json() object on success.
     */
     patch(url, body, options)
-    
+
     /**
     * PUT web method for the given url and body
     * @param {string} url - Endpoint for the PUT method
@@ -141,7 +145,7 @@ Note: The optional `options` argument for all methods corresponds to
     * @returns {Promise} contains the response.body.json() object on success.
     */
     put(url, body, options)
-    
+
     /**
     * DELETE web method for the given url
     * @param {string} url - Endpoint for the DELETE request
@@ -152,7 +156,8 @@ Note: The optional `options` argument for all methods corresponds to
     *       It is done this way because in some edge cases the JS VM was interpreting this as a JS DELETE command.
     */
     delete_(url, options)
-    
+    delete(url, options) // Alias to delete_()
+
     /**
     * HEAD web method for the given url
     * @param {string} url Endpoint for the HEAD request.
@@ -160,7 +165,7 @@ Note: The optional `options` argument for all methods corresponds to
     * @returns {Promise}
     */
     head(url, options)
-    
+
     /**
     * OPTIONS web method for the given url
     * @param {string} url Endpoint for the OPTIONS request.
@@ -168,7 +173,7 @@ Note: The optional `options` argument for all methods corresponds to
     * @returns {Promise}
     */
     options(url, options)
-    
+
     /**
     * CONNECT web method for the given url and optional body.
     * @param {string} url Endpoint for the CONNECT method.
@@ -177,7 +182,7 @@ Note: The optional `options` argument for all methods corresponds to
     * @returns {Promise}
     */
     connect(url, body, options)
-    
+
     /**
      * TRACE web method for the given url
      * @param {string} url Endpoint for the TRACE request.
