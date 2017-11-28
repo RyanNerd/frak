@@ -9,7 +9,7 @@ Recommended is via NPM / YARN
 In your `package.json` for your app:
 
     "dependencies": {
-      "frak": "^1.0.0"
+      "frak": "^1.1.4"
     }
 
 Install with NPM or YARN:
@@ -17,6 +17,8 @@ Install with NPM or YARN:
     npm install
     
     yarn install
+
+**Important Note: `frak-js` is deprecated. Only use `frak`**
 
 ## Implementation
 
