@@ -46,23 +46,23 @@ The constructor takes two optional arguments for the cases where you need Frak b
 
 ```ecmascript 6
   /**
-   * Constructor argument is a settings hash and can be undefined to use the defaults
+   * Constructor argument is an optional settings hash
    *
    * @param {object} [settings] 
-   * @param {object} [options]
    */
-  Frak(settings, options)
+  Frak(settings)
 
 ```
 
 `settings` is an object hash for how Frak should behave:
 
-| Property                 | Default   | Description                                                                |
-| --------                 | -------   | -----------                                                                |
-| throwErrorOnFailedStatus | false     | Set this to true if you want Frak to behave more like Jquery's Ajax        |
-| allowZeroLengthResponse  | false     | Set this to true for responses to **not** require a response body     |
-| requestDefaultHeaders    | see below | Headers to send for each HTTP method (see below)                           |
-| abort                    | null      | [Signal](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) |
+| Property                    | Default   | Description                                                                |
+| --------                    | -------   | -----------                                                                |
+| throwErrorOnFailedStatus    | false     | Set this to true if you want Frak to behave more like Jquery's Ajax        |
+| allowZeroLengthResponse     | false     | Set this to true for responses to **not** require a response body          |
+| requestDefaultHeaders       | see below | Headers to send for each HTTP method (see below)                           |
+| responseExpectedContentType | see below | Expected Content-Type for each HTTP method (see below)                     |
+| abort                       | null      | [Signal](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) |
 
 `requestDefaultHeaders` default:
 ```
@@ -77,9 +77,24 @@ The constructor takes two optional arguments for the cases where you need Frak b
       connect: [{ 'content-type': null }],
       trace: [{ 'content-type': null }]
     }
-```   
+```
 
-`options` is also an object hash with the following defaults:
+`responseExpectedContentType` default:
+```
+    {
+      get: Frak.JSON_CONTENT_TYPE,
+      post: Frak.JSON_CONTENT_TYPE,
+      put: Frak.JSON_CONTENT_TYPE,
+      patch: Frak.JSON_CONTENT_TYPE,
+      delete: null,
+      head: null,
+      options: null,
+      connect: null,
+      trace: null
+  };
+```
+
+Most Request properties can be set the following are Frak defaults:
 
 | Property | Default   | Description                             |
 | -------- | -------   | -----------                             |
@@ -95,14 +110,14 @@ Frak acts as a _proxy_ to fetch() exposing methods matching the names of the HTT
 (with the exception of DELETE -- which is named `delete_` so JS doesn't pitch a fit).
 
 The common methods of GET, POST, PATCH, and PUT have an expectation that the response 'Content-Type' (if any)
-will be 'application/json'. If there is a payload (response content body) that is of a different content type than JSON 
-then Frak will throw an error.
+will be 'application/json'. 
+If there is a payload (response content body) it **must** match the `responseExpectedContentType` or a `TypeError` 
+will be thrown. `responseExpectedContentType` can be overridden in the constructor argument.
 
 Frak is implemented as a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises).
-For the common methods (GET, POST, PATCH and PUT) that have a return body -- Frak will return the JSON object as the promise response.
-If the return body is not valid JSON or another error occurs then the response can be caught as an error object.
+For the common methods (GET, POST, PATCH and PUT) that have a return body -- Frak will return the JSON object as the 
+promise response. Other methods will return the `response` object.
 
- 
 What follows are Frak's public methods and their signatures.
 
 **Methods**
