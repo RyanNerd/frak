@@ -9,7 +9,7 @@ Recommended is via NPM / YARN
 In your `package.json` for your app:
 
     "dependencies": {
-      "frak": "^1.1.4"
+      "frak": "^1.1.5"
     }
 
 Install with NPM or YARN:
@@ -41,22 +41,25 @@ Here's a simple example of a GET request using Frak:
     
     getExample('http://localhost/8080/endpoint');
 ```
+
 **Frak constructor**
 
 For most applications the defaults for Frak should be sufficient.
-The constructor takes two optional arguments for the cases where you need Frak behave differently.
+The constructor takes a single optional argument for the cases where you need Frak behave differently.
+
 
 ```ecmascript 6
   /**
    * Constructor argument is an optional settings hash
    *
-   * @param {object} [settings] 
+   * @param {object} [settings] The Request object hash (with some additional Frak specific properties)
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/Request
    */
   Frak(settings)
 
 ```
 
-`settings` is an object hash for how Frak should behave:
+These are Frak specific properties that can be in the settings hash:
 
 | Property                    | Default   | Description                                                                |
 | --------                    | -------   | -----------                                                                |
@@ -64,7 +67,6 @@ The constructor takes two optional arguments for the cases where you need Frak b
 | allowZeroLengthResponse     | false     | Set this to true for responses to **not** require a response body          |
 | requestDefaultHeaders       | see below | Headers to send for each HTTP method (see below)                           |
 | responseExpectedContentType | see below | Expected Content-Type for each HTTP method (see below)                     |
-| abort                       | null      | [Signal](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) |
 
 `requestDefaultHeaders` default:
 ```
@@ -96,15 +98,14 @@ The constructor takes two optional arguments for the cases where you need Frak b
   };
 ```
 
-Most Request properties can be set the following are Frak defaults:
+The settings object hash can use _most_ properties in the
+[Request property](https://developer.mozilla.org/en-US/docs/Web/API/Request) object hash.
 
-| Property | Default   | Description                             |
-| -------- | -------   | -----------                             |
-| mode     | 'cors'    | Cross-Origin Resource Sharing enabled   |
-| headers  | {}        | Headers to send with each request       |
+Frak overrides the following default property:
 
-The above settings are implicitly set and
-any [Request property](https://developer.mozilla.org/en-US/docs/Web/API/Request) can be used in this hash.
+| Property | Default   | Link                                                          |
+| -------- | -------   | ----                                                          |
+| mode     | 'cors'    | https://developer.mozilla.org/en-US/docs/Web/API/Request/mode |
 
 Frak supports all the standard [HTTP web methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods).
 
@@ -112,13 +113,14 @@ Frak acts as a _proxy_ to fetch() exposing methods matching the names of the HTT
 (with the exception of DELETE -- which is named `delete_` so JS doesn't pitch a fit).
 
 The common methods of GET, POST, PATCH, and PUT have an expectation that the response 'Content-Type' (if any)
-will be 'application/json'. 
+will be 'application/json'. This comes from the `responseExpectedContentType` property.
 If there is a payload (response content body) it **must** match the `responseExpectedContentType` or a `TypeError` 
-will be thrown. `responseExpectedContentType` can be overridden in the constructor argument.
+will be thrown. `responseExpectedContentType` can of course be overridden in the constructor settings argument.
 
 Frak is implemented as a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises).
 For the common methods (GET, POST, PATCH and PUT) that have a return body -- Frak will return the JSON object as the 
-promise response. Other methods will return the `response` object.
+promise response. 
+Other methods will return the `fetch()` [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) object.
 
 What follows are Frak's public methods and their signatures.
 
@@ -251,14 +253,7 @@ The developer of Frak found himself saying "What the frak?!?" over and over espe
 the CORS insanity.
 
 Note: Frak works really well with the [Slim Framework](https://www.slimframework.com) and is the primary reason that
-      Frak exists in the first place. (Not to say that Frak will not work with other server side web services)
-
------------
-
-Question: Why did you name this class library `frak` and not just `frak`?
-
-Answer: `frak` at [NPM](https://www.npmjs.com/package/frak) is already taken 
-(although it appears to be 4 year old abandonware).
+      Frak exists in the first place. (Not to say that Frak will not work well with other server side web services)
 
 ## Contributing
 
