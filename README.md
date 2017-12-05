@@ -9,7 +9,7 @@ Recommended is via NPM / YARN
 In your `package.json` for your app:
 
     "dependencies": {
-      "frak": "^1.1.5"
+      "frak": "^1.1.6"
     }
 
 Install with NPM or YARN:
@@ -172,10 +172,9 @@ Note: The optional `options` argument for all methods corresponds to
     * @returns {Promise}
     * 
     * NOTE: This method is called `delete_` with an underscore.
-    *       It is done this way because in some edge cases the JS VM was interpreting this as a JS DELETE command.
+    *       It is done this way because packagers such as webpak will choke on this.
     */
     delete_(url, options)
-    delete(url, options) // Alias to delete_()
 
     /**
     * HEAD web method for the given url
