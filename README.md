@@ -238,18 +238,11 @@ You can make Frak behave more like Ajax by setting `throwErrorOnFailedStatus` to
 Frak takes this one step further for responses expecting JSON in the body that has something else will throw an error. 
 Upon success the promise will contain a valid JSON payload (for methods that return a body).
 
-Another difference is that [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) is enabled by default. 
-The reasoning for this is that CORS is an annoying necessary evil with **tons** of documented issues
-where developers stub their toes and break their fingers trying to get `fetch` or even Ajax request/response to work.
-
-__If you are detecting some personal annoyance at CORS by the developer of Frak you are correct.__
-
-Enabling CORS by default is admittedly a potential security risk but for the sake of developers sanity and the technical
- support nightmare that CORS is it will remain enabled by default in Frak.
-
 The name Frak is a nod in the direction of [Battlestar Galatica](https://en.wikipedia.org/wiki/Frak_(expletive))
 The developer of Frak found himself saying "What the frak?!?" over and over especially when it came to dealing with
-the CORS insanity.
+the [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) insanity.
+
+__If you are detecting some personal annoyance at CORS by the developer of Frak you are correct.__
 
 Note: Frak works really well with the [Slim Framework](https://www.slimframework.com) and is the primary reason that
       Frak exists in the first place. (Not to say that Frak will not work well with other server side web services)
