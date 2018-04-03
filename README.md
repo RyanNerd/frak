@@ -1,6 +1,6 @@
 # Frak
 
-__An implementation of the [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) specifically for JSON based requests and responses__
+__A simple implementation of the [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) specifically for JSON based requests and responses__
 
 ## Installation 
 
@@ -9,7 +9,7 @@ Recommended is via NPM / YARN
 In your `package.json` for your app:
 
     "dependencies": {
-      "frak": "^1.1"
+      "frak": "^1.1.18"
     }
 
 Install with NPM or YARN:
@@ -30,9 +30,9 @@ Here's a simple example of a GET request using Frak:
     
     getExample = (uri) => {
       return frak.get(uri)
-      .then((json) =>
+      .then((response) =>
       {
-        console.log(json);
+        console.log(response);
       })
       .catch((error) => {
         console.log('Something went wrong', error);
@@ -64,9 +64,7 @@ These are Frak specific properties that can be in the settings hash:
 | Property                    | Default   | Description                                                                |
 | --------                    | -------   | -----------                                                                |
 | throwErrorOnFailedStatus    | false     | Set this to true if you want Frak to behave more like Jquery's Ajax        |
-| allowZeroLengthResponse     | false     | Set this to true for responses to **not** require a response body          |
 | requestDefaultHeaders       | see below | Headers to send for each HTTP method (see below)                           |
-| responseExpectedContentType | see below | Expected Content-Type for each HTTP method (see below)                     |
 
 `requestDefaultHeaders` default:
 ```
@@ -83,21 +81,6 @@ These are Frak specific properties that can be in the settings hash:
     }
 ```
 
-`responseExpectedContentType` default:
-```
-    {
-      get: Frak.JSON_CONTENT_TYPE,
-      post: Frak.JSON_CONTENT_TYPE,
-      put: Frak.JSON_CONTENT_TYPE,
-      patch: Frak.JSON_CONTENT_TYPE,
-      delete: null,
-      head: null,
-      options: null,
-      connect: null,
-      trace: null
-  };
-```
-
 The settings object hash can use _most_ properties in the
 [Request property](https://developer.mozilla.org/en-US/docs/Web/API/Request) object hash.
 
@@ -112,15 +95,10 @@ Frak supports all the standard [HTTP web methods](https://developer.mozilla.org/
 Frak acts as a _proxy_ to fetch() exposing methods matching the names of the HTTP web methods 
 (with the exception of DELETE -- which is named `delete_` so JS doesn't pitch a fit).
 
-The common methods of GET, POST, PATCH, and PUT have an expectation that the response 'Content-Type' (if any)
-will be 'application/json'. This comes from the `responseExpectedContentType` property.
-If there is a payload (response content body) it **must** match the `responseExpectedContentType` or a `TypeError` 
-will be thrown. `responseExpectedContentType` can of course be overridden in the constructor settings argument.
-
 Frak is implemented as a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises).
-For the common methods (GET, POST, PATCH and PUT) that have a return body -- Frak will return the JSON object as the 
-promise response. 
-Other methods will return the `fetch()` [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) object.
+If the web service response header of Content-Type is 'application/json' then Frak will implement the json() parser 
+as the promise response. Other content types are not specifically handled by Frak. 
+For more info see `fetch()` [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) object.
 
 What follows are Frak's public methods and their signatures.
 
@@ -219,14 +197,10 @@ Note: The optional `options` argument for all methods corresponds to
 It's certainly possible to simply use 
 [`fetch()`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) directly.
 
-Frak is an opinionated JavaScript class library that targets a JSON request/response scenario.
-If you need to deal with XML or some other data format then Frak is **not** a good fit in these situations.
+Frak is a class that specifically targets a JSON request/response scenario.
+If you need to deal with XML or some other data format then Frak is probably **not** a good fit in these situations.
 
-When you call a Frak method such as `get()`, valid JSON is expected in the promise and captured in `then()` 
-otherwise error details will be in the `catch()`. 
 Frak is a wrapper around `fetch()` which is similar to `XMLHttpRequest()` and Jquery's `$.Ajax()`
--- with the biggest significant difference being that a failed response status (ex: 404 Not Found) doesn't indicate an
-exception or error.
 You can make Frak behave more like Ajax by setting `throwErrorOnFailedStatus` to true:
 
 ```ecmascript 6
@@ -234,11 +208,7 @@ You can make Frak behave more like Ajax by setting `throwErrorOnFailedStatus` to
     const frak = new Frak({throwErrorOnFailedStatus: true});
 ```
 
-`fetch()` typically only throws an exception when a network error occurs. 
-Frak takes this one step further for responses expecting JSON in the body that has something else will throw an error. 
-Upon success the promise will contain a valid JSON payload (for methods that return a body).
-
-The name Frak is a nod in the direction of [Battlestar Galatica](https://en.wikipedia.org/wiki/Frak_(expletive))
+The name Frak is a nod in the direction of [Battlestar Galatica](https://en.wikipedia.org/wiki/Frak_(expletive)).
 The developer of Frak found himself saying "What the frak?!?" over and over especially when it came to dealing with
 the [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) insanity.
 
