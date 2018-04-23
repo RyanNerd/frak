@@ -29,7 +29,8 @@ Here's a simple example of a GET request using Frak:
     const frak = new Frak();
     
     getExample = (uri) =>
-    {  return frak.get(uri)
+    {  
+      return frak.get(uri)
       .then((response) =>
       {
         console.log(response);
@@ -44,53 +45,22 @@ Here's a simple example of a GET request using Frak:
 
 **Frak constructor**
 
-For most applications the defaults for Frak should be sufficient.
-The constructor takes a single optional argument for the cases where you need Frak behave differently.
-
+The constructor takes a single optional argument
 
 ```ecmascript 6
   /**
-   * Constructor argument is an optional settings hash
+   * Constuctor
    *
-   * @param {object} [settings] 
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/Request
+   * @param {object} [throwErrorOnFailedStatus] 
    */
-  Frak(settings)
-
+  Frak(throwErrorOnFailedStatus = true)
 ```
 
-These are the Frak settings defaults and description:
+`throwErrorOnFailedStatus` Set this to true if you want Frak to behave like Jquery's `$.Ajax()`                  |
 
-| Property                 | Default   | Description                                                             |
-| --------                 | -------   | -----------                                                             |
-| throwErrorOnFailedStatus | false     | Set this to true if you want Frak to behave more like Jquery's Ajax     |
-| resolveJsonResponse      | true      | `fetch()` responses of the type `application/json` will resolve to JSON |
-| request                  | see below | Request object if you want to override Frak's defaults                  |
-
-`throwErrorOnFailedStatus`
- 
-Set this to true if you want Frak to behave more like Jquery's `$.AJAX()`
-Frak is a wrapper around `fetch()` which **does not** throw errors when `status !== 200`
-Jquery's `$.AJAX()` on the other hand does throw errors when `status === 200`.
+Frak is a wrapper around `fetch()` which **does not** throw errors when `status !== 200` -- 
+Jquery's `$.AJAX()` on the other hand does throw errors when `status !== 200`.
   
-resolveJsonResponse`
- 
-Set this to false if you want the returned promise to **not** resolve to JSON. The resloved promise from a `fetch()`
-call by default returns a [Response object](https://developer.mozilla.org/en-US/docs/Web/API/Response). Frak detects 
-if the response is a content-type of `application/json` and if so it will resolve the Response object to JSON. 
-
-`request`
-
-You can set the default request properties in the constructor.
-See [Request object](https://developer.mozilla.org/en-US/docs/Web/API/Request) for available properties.
-
-Frak default request properties are:
-
-| Property | Default   | Link                                                              |
-| -------- | -------   | ----                                                              |
-| mode     | 'cors'    | https://developer.mozilla.org/en-US/docs/Web/API/Request/mode     |
-| referrer | 'client'  | https://developer.mozilla.org/en-US/docs/Web/API/Request/referrer |
-
 Frak supports all the standard [HTTP web methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods).
 
 **Methods**
@@ -106,13 +76,17 @@ Other content types are not specifically handled by Frak and resolve to a standa
 What follows are Frak's public methods and their signatures.
 
 Note: The optional `requestOptions` argument for all methods corresponds to a
-[Request Object](https://developer.mozilla.org/en-US/docs/Web/API/Request) An object primitive can also be used (ex: `{mode: "no-cors"}`)
+[Request Object](https://developer.mozilla.org/en-US/docs/Web/API/Request) An object literal can also be used (ex: `{mode: "no-cors"}`)
+
+Note: Set `resolveJsonResponse` to false if you want the returned promise to **not** resolve to JSON. The resloved promise from a `fetch()`
+call by default returns a [Response object](https://developer.mozilla.org/en-US/docs/Web/API/Response). Frak detects 
+if the response is a content-type of `application/json` and if so it will resolve the Response object to JSON. 
 
 ```ecmascript 6
     /**
     * GET web method for the given url
     * @param {string} url The endpoint for the GET request
-    * @param {object} [requestOptions] 
+    * @param {object} [requestOptions]
     * @returns {Promise} contains the response.body.json() object on success.
     */
     get(url, requestOptions)
