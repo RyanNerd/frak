@@ -87,47 +87,52 @@ if the response is a content-type of `application/json` and if so it will resolv
     * GET web method for the given url
     * @param {string} url The endpoint for the GET request
     * @param {object} [requestOptions]
+    * @param {boolean} [resolveToJSON] If content-type is JSON then resolve response body as JSON (default is true) 
     * @returns {Promise} contains the response.body.json() object on success.
     */
-    get(url, requestOptions)
+    get(url, requestOptions, resolveToJSON)
 
     /**
     * POST web method for the given url and body
     * @param {string} url The URL endpoint
     * @param {object | string} body The body of the request (if a string it must be valid JSON)
-    * @param {object} [requestOptions] 
+    * @param {object} [requestOptions]
+    * @param {boolean} [resolveToJSON] If content-type is JSON then resolve response body as JSON (default is true) 
     * @returns {Promise} contains the response.body.json() object on success.
     */
-    post(url, body, requestOptions)
+    post(url, body, requestOptions, resolveToJSON)
 
     /**
     * PATCH web method for the given url and body
     * @param {string} url - Endpoint for the request
     * @param {object | string} body - The body of the PATCH request (if a string it must be valid JSON)
+    * @param {boolean} [resolveToJSON] If content-type is JSON then resolve response body as JSON (default is true) 
     * @param {object} [requestOptions] 
     * @returns {Promise} contains the response.body.json() object on success.
     */
-    patch(url, body, requestOptions)
+    patch(url, body, requestOptions, resolveToJSON)
 
     /**
     * PUT web method for the given url and body
     * @param {string} url - Endpoint for the PUT method
     * @param {object | string} body -The body of the PUT request (if a string it must be valid JSON)
-    * @param {object} [requestOptions] 
+    * @param {object} [requestOptions]
+    * @param {boolean} [resolveToJSON] If content-type is JSON then resolve response body as JSON (default is true)  
     * @returns {Promise} contains the response.body.json() object on success.
     */
-    put(url, body, requestOptions)
+    put(url, body, requestOptions, resolveToJSON)
 
     /**
     * DELETE web method for the given url
     * @param {string} url - Endpoint for the DELETE request
-    * @param {object} [requestOptions] 
+    * @param {object} [requestOptions]
+    * @param {boolean} [resolveToJSON] If content-type is JSON then resolve response body as JSON (default is true)  
     * @returns {Promise}
     * 
     * NOTE: This method is called `delete_` with an underscore.
     * It is done this way because may JS engines consider delete a reserved word.
     */
-    delete_(url, requestOptions)
+    delete_(url, requestOptions, resolveToJSON)
 
     /**
     * HEAD web method for the given url
@@ -141,9 +146,10 @@ if the response is a content-type of `application/json` and if so it will resolv
     * OPTIONS web method for the given url
     * @param {string} url Endpoint for the OPTIONS request.
     * @param {object} [requestOptions]
+    * @param {boolean} [resolveToJSON] If content-type is JSON then resolve response body as JSON (default is true) 
     * @returns {Promise}
     */
-    options(url, requestOptions)
+    options(url, requestOptions, resolveToJSON)
 
     /**
     * CONNECT web method for the given url and optional body.
