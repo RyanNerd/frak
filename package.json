@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel lib -d build",
-    "lint": "eslint lib/**; exit 0",
+    "lint": "./node_modules/.bin/eslint lib/**; exit 0",
     "lint:watch": "esw -w lib/**",
     "prepublish": "npm run build"
   },
@@ -32,7 +32,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
-    "eslint": "^4.11.0",
+    "eslint": "^4.19.1",
     "eslint-plugin-import": "^2.8.0",
     "eslint-watch": "^3.1.3"
   },
