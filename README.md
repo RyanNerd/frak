@@ -9,7 +9,7 @@ Recommended is via NPM / YARN
 In your `package.json` for your app:
 
     "dependencies": {
-      "frak": "^1.1.18"
+      "frak": "^1.3.3"
     }
 
 Install with NPM or YARN:
@@ -45,15 +45,15 @@ Here's a simple example of a GET request using Frak:
 
 **Frak constructor**
 
-The constructor takes a single optional argument
+The constructor takes a single optional argument which defaults to false
 
 ```ecmascript 6
   /**
    * Constuctor
    *
-   * @param {object} [throwErrorOnFailedStatus] 
+   * @param {boolean} [throwErrorOnFailedStatus] 
    */
-  Frak(throwErrorOnFailedStatus = true)
+  Frak(throwErrorOnFailedStatus = false)
 ```
 
 `throwErrorOnFailedStatus` Set this to true if you want Frak to behave like Jquery's `$.Ajax()`                  |
