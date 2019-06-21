@@ -9,7 +9,7 @@ Recommended is via NPM / YARN
 In your `package.json` for your app:
 
     "dependencies": {
-      "frak": "^1.3.3"
+      "frak": "^2.2.0"
     }
 
 Install with NPM or YARN:
