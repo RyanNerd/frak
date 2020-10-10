@@ -1,6 +1,6 @@
 {
   "name": "frak",
-  "version": "2.2.1",
+  "version": "3.0.0",
   "description": "Implementation of the Fetch API specifically for JSON based Web Service requests and responses",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
