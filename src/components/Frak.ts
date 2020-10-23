@@ -1,6 +1,6 @@
 type HTTPMethods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'CONNECT' | 'TRACE';
-type RequestWithBody = <T>(uri: string, body: any, request: RequestInit)  => Promise<T>
-type RequestWithoutBody = <T>(uri: string, request: RequestInit) => Promise<T>
+type RequestWithBody = <T>(uri: string, body: any, request?: RequestInit)  => Promise<T>
+type RequestWithoutBody = <T>(uri: string, request?: RequestInit) => Promise<T>
 interface IDefaultRequestContent {
     [key: string]: string | null;
 }
@@ -35,7 +35,7 @@ const DEFAULT_REQUEST_CONTENT_TYPE = {
  * @param {RequestInit} defaultRequestInit
  * @constructor
  */
-const Frak = (defaultRequestInit: RequestInit = {mode: 'cors'}): IFrak => {
+export const Frak = (defaultRequestInit: RequestInit = {mode: 'cors'}): IFrak => {
     const _baseRequest = {...defaultRequestInit};
 
     /**
@@ -218,34 +218,34 @@ const Frak = (defaultRequestInit: RequestInit = {mode: 'cors'}): IFrak => {
     }
 
     return {
-        get: async <T>(uri: string, request: RequestInit = {}): Promise<T> => {
+        get: async <T>(uri: string, request?: RequestInit): Promise<T> => {
             return _get(uri, request);
         },
-        post: async <T>(uri: string, body: any, request: RequestInit = {body: JSON.stringify(body)}): Promise<T> => {
+        post: async <T>(uri: string, body: any, request?: RequestInit): Promise<T> => {
             return _post(uri, body, request);
         },
-        patch: async <T>(uri: string, body: any, request: RequestInit = {body: JSON.stringify(body)}): Promise<T> => {
+        patch: async <T>(uri: string, body: any, request?: RequestInit): Promise<T> => {
             return _patch(uri, body, request);
         },
-        put: async <T>(uri: string, body: any, request: RequestInit = {body: JSON.stringify(body)}): Promise<T> => {
+        put: async <T>(uri: string, body: any, request?: RequestInit): Promise<T> => {
             return _put(uri, body, request);
         },
-        delete: async <T>(uri: string, request: RequestInit = {}): Promise<T> => {
+        delete: async <T>(uri: string, request?: RequestInit): Promise<T> => {
             return _delete(uri, request);
         },
-        options: async <T>(uri: string, request: RequestInit = {}): Promise<T> => {
+        options: async <T>(uri: string, request?: RequestInit): Promise<T> => {
             return _options(uri, request);
         },
-        head: async <T>(uri: string, request: RequestInit = {}): Promise<T> => {
+        head: async <T>(uri: string, request?: RequestInit): Promise<T> => {
             return _head(uri, request);
         },
-        connect: async <T>(uri: string, request: RequestInit = {}): Promise<T> => {
+        connect: async <T>(uri: string, request?: RequestInit): Promise<T> => {
             return _connect(uri, request);
         },
-        trace: async <T>(uri: string, request: RequestInit = {}): Promise<T> => {
+        trace: async <T>(uri: string, request?: RequestInit): Promise<T> => {
             return _trace(uri, request);
         }
-    }
+    } as IFrak;
 }
 
 export default Frak;
