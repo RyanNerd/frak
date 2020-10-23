@@ -4,7 +4,7 @@ type RequestWithoutBody = <T>(uri: string, request: RequestInit) => Promise<T>
 interface IDefaultRequestContent {
     [key: string]: string | null;
 }
-interface IFrak {
+export interface IFrak {
     get: RequestWithoutBody
     post: RequestWithBody
     patch: RequestWithBody
