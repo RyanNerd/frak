@@ -95,25 +95,21 @@ What follows are Frak's public methods and their signatures in TypeScript format
 
 Types:
   - [RequestInit](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.requestinit.html)
-  - JSON = object | string // as valid JSON
+  - JSON = `object | string // as valid JSON`
   - [Promise](https://microsoft.github.io/PowerBI-JavaScript/classes/_typings_globals_es6_promise_index_d_.promise.html)
 
 ```typescript
-get<T>(url: string, requestOptions?: RequestInit): Promise<T>
-post<T>(url: string, body: JSON, requestOptions?: RequestInit): Promise<T>
-patch<T>(url: string, body: JSON, requestOptions?: RequestInit): Promise<T>
-put<T>(url: string, body: JSON, requestOptions?: RequestInit): Promise<T>
-delete<T>(url: string, requestOptions?: requestInit): Promise<T>
-head<T>(url: string, requestOptions?: RequestInit): Promise<T>
-options<T>(url: string, requestOptions?:RequestInit): Promise<T>
-connect<T>(url: string, body: JSON, requestOptions?: RequestInit): Promise<T>
-
-/**
- * Note: Included only for completeness. 
- * There are potential security exploits with this web method and its general use is discouraged.
- * @link https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
- */
-trace<T>(url: string, requestOptions?: RequestInit): Promise<T>
+interface Frak {
+    get: async <T>(uri: string, request?: RequestInit): Promise<T> => {}
+    post: async <T>(uri: string, body: any, request?: RequestInit): Promise<T> => {}
+    patch: async <T>(uri: string, body: any, request?: RequestInit): Promise<T> => {}
+    put: async <T>(uri: string, body: any, request?: RequestInit): Promise<T> => {}
+    delete: async <T>(uri: string, request?: RequestInit): Promise<T> => {}
+    options: async <T>(uri: string, request?: RequestInit): Promise<T> => {}
+    head: async <T>(uri: string, request?: RequestInit): Promise<T> => {}
+    connect: async <T>(uri: string, request?: RequestInit): Promise<T> => {}
+    trace: async <T>(uri: string, request?: RequestInit): Promise<T> => {}
+}
 ```
 
 ## Why use Frak and what is with the name Frak?
