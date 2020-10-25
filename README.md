@@ -2,201 +2,144 @@
 
 __A simple implementation of the [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) specifically for JSON based requests and responses__
 
+**Important Notes:**
+
+- `frak-js` is deprecated. **Only** use `Frak`
+-  Versions of Frak prior to 3.1.2 are **NOT** supported or maintained.
+
 ## Installation 
 
 Recommended is via NPM / YARN
 
-In your `package.json` for your app:
+In your `package.json` for your app add this:
 
-    "dependencies": {
-      "frak": "^2.2.0"
-    }
+```metadata json
+"dependencies": {
+  "frak": "^3.1.3"
+}
+```
 
-Install with NPM or YARN:
-
-    npm install
-    
-    yarn install
-
-**Important Note: `frak-js` is deprecated. Only use `frak`**
+ Then install with either NPM or YARN:
+```shell script
+npm install
+yarn install
+```
 
 ## Implementation
+
+Frak is a wrapper around `fetch()` Frak supports all the standard [HTTP web methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods).
 
 Here's a simple example of a GET request using Frak:
 
 ```ecmascript 6
-    import { Frak } from 'frak';
-    const frak = new Frak();
-    
-    getExample = (uri) =>
-    {  
-      return frak.get(uri)
-      .then((response) =>
-      {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    };
-    
-    getExample('http://localhost:8080/endpoint');
+import Frak from "frak/lib/components/Frak";
+const frak = new Frak();
+
+getExample = (uri) =>
+{  
+  return frak.get(uri)
+  .then((response) =>
+  {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+};
+
+getExample('http://localhost:8080/endpoint');
 ```
 
 **Frak constructor**
 
-The constructor takes a single optional argument which defaults to false
+The constructor takes a single optional argument of the type [RequestInit](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.requestinit.html)
+The default value is `{mode: "cors"}`. 
 
-```ecmascript 6
-  /**
-   * Constuctor
-   *
-   * @param {boolean} [throwErrorOnFailedStatus] 
-   */
-  Frak(throwErrorOnFailedStatus = false)
+Anytime a Frak request is made what is passed to the Frak constructor will be merged into the request.
+ 
+Here's an example:
+
+```typescript
+// https://developer.mozilla.org/en-US/docs/Web/API/AbortController
+const abortController = new AbortController();
+// All frak method calls will now have an abort signal and the mode "cors"
+const frak = Frak({signal: abortController.signal, mode: "cors"}); 
+
+/**
+/* @see https://dog.ceo/dog-api/
+*/
+const getRandomDogImage = async () => {
+    // Because the abort signal and mode of "cors" are in the Frak constructor
+    // when the get() request is made these are automatically included in the request.
+    return await frak.get("https://dog.ceo/api/breeds/image/random");    
+}
+
+getRandomDogImage()
+.then((response) => {
+    return response.response.message;
+})
+.then((img) => { 
+    document.getElementById('dog-img').setAttribute('src', img);    
+});
 ```
-
-`throwErrorOnFailedStatus` Set this to true if you want Frak to behave like Jquery's `$.Ajax()`                  |
-
-Frak is a wrapper around `fetch()` which **does not** throw errors when `status !== 200` -- 
-Jquery's `$.AJAX()` on the other hand does throw errors when `status !== 200`.
-  
-Frak supports all the standard [HTTP web methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods).
 
 **Methods**
 
 Frak acts as a _proxy_ to `fetch()` exposing methods matching the names of the HTTP web methods 
-(with the exception of DELETE -- which is named `delete_`.
 
-Frak (like `fetch()`) is implemented as a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises).
-If the web service response header of Content-Type is 'application/json' then Frak will resolve to JSON (see `resolveJsonResponse` above). 
-Other content types are not specifically handled by Frak and resolve to a standard  
-[Response object](https://developer.mozilla.org/en-US/docs/Web/API/Response).
+Frak is implemented as a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises).
+If the web service response header of Content-Type is 'application/json' then Frak will resolve to `Promise<JSON>`. 
+Content types other than `application/json` or `text/json` in the response will throw the [Response object](https://developer.mozilla.org/en-US/docs/Web/API/Response) as an error.   
 
-What follows are Frak's public methods and their signatures.
+What follows are Frak's public methods and their signatures in TypeScript format.
 
-Note: The optional `requestOptions` argument for all methods corresponds to a
-[Request Object](https://developer.mozilla.org/en-US/docs/Web/API/Request) An object literal can also be used (ex: `{mode: "no-cors"}`)
+Types:
+  - [RequestInit](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.requestinit.html)
+  - JSON = object | string // as valid JSON
+  - [Promise](https://microsoft.github.io/PowerBI-JavaScript/classes/_typings_globals_es6_promise_index_d_.promise.html)
 
-Note: Set `resolveJsonResponse` to false if you want the returned promise to **not** resolve to JSON. The resloved promise from a `fetch()`
-call by default returns a [Response object](https://developer.mozilla.org/en-US/docs/Web/API/Response). Frak detects 
-if the response is a content-type of `application/json` and if so it will resolve the Response object to JSON. 
+```typescript
+get<T>(url: string, requestOptions?: RequestInit): Promise<T>
+post<T>(url: string, body: JSON, requestOptions?: RequestInit): Promise<T>
+patch<T>(url: string, body: JSON, requestOptions?: RequestInit): Promise<T>
+put<T>(url: string, body: JSON, requestOptions?: RequestInit): Promise<T>
+delete<T>(url: string, requestOptions?: requestInit): Promise<T>
+head<T>(url: string, requestOptions?: RequestInit): Promise<T>
+options<T>(url: string, requestOptions?:RequestInit): Promise<T>
+connect<T>(url: string, body: JSON, requestOptions?: RequestInit): Promise<T>
 
-```ecmascript 6
-    /**
-    * GET web method for the given url
-    * @param {string} url The endpoint for the GET request
-    * @param {object} [requestOptions]
-    * @param {boolean} [resolveToJSON] If content-type is JSON then resolve response body as JSON (default is true) 
-    * @returns {Promise} contains the response.body.json() object on success.
-    */
-    get(url, requestOptions, resolveToJSON)
-
-    /**
-    * POST web method for the given url and body
-    * @param {string} url The URL endpoint
-    * @param {object | string} body The body of the request (if a string it must be valid JSON)
-    * @param {object} [requestOptions]
-    * @param {boolean} [resolveToJSON] If content-type is JSON then resolve response body as JSON (default is true) 
-    * @returns {Promise} contains the response.body.json() object on success.
-    */
-    post(url, body, requestOptions, resolveToJSON)
-
-    /**
-    * PATCH web method for the given url and body
-    * @param {string} url - Endpoint for the request
-    * @param {object | string} body - The body of the PATCH request (if a string it must be valid JSON)
-    * @param {boolean} [resolveToJSON] If content-type is JSON then resolve response body as JSON (default is true) 
-    * @param {object} [requestOptions] 
-    * @returns {Promise} contains the response.body.json() object on success.
-    */
-    patch(url, body, requestOptions, resolveToJSON)
-
-    /**
-    * PUT web method for the given url and body
-    * @param {string} url - Endpoint for the PUT method
-    * @param {object | string} body -The body of the PUT request (if a string it must be valid JSON)
-    * @param {object} [requestOptions]
-    * @param {boolean} [resolveToJSON] If content-type is JSON then resolve response body as JSON (default is true)  
-    * @returns {Promise} contains the response.body.json() object on success.
-    */
-    put(url, body, requestOptions, resolveToJSON)
-
-    /**
-    * DELETE web method for the given url
-    * @param {string} url - Endpoint for the DELETE request
-    * @param {object} [requestOptions]
-    * @param {boolean} [resolveToJSON] If content-type is JSON then resolve response body as JSON (default is true)  
-    * @returns {Promise}
-    * 
-    * NOTE: This method is called `delete_` with an underscore.
-    * It is done this way because may JS engines consider delete a reserved word.
-    */
-    delete_(url, requestOptions, resolveToJSON)
-
-    /**
-    * HEAD web method for the given url
-    * @param {string} url Endpoint for the HEAD request.
-    * @param {object} [requestOptions]
-    * @returns {Promise}
-    */
-    head(url, requestOptions)
-
-    /**
-    * OPTIONS web method for the given url
-    * @param {string} url Endpoint for the OPTIONS request.
-    * @param {object} [requestOptions]
-    * @param {boolean} [resolveToJSON] If content-type is JSON then resolve response body as JSON (default is true) 
-    * @returns {Promise}
-    */
-    options(url, requestOptions, resolveToJSON)
-
-    /**
-    * CONNECT web method for the given url and optional body.
-    * @param {string} url Endpoint for the CONNECT method.
-    * @param {string} [body] Body to include with the CONNECT request if any.
-    * @param {object} [requestOptions] 
-    * @returns {Promise}
-    */
-    connect(url, body, requestOptions)
-
-    /**
-     * TRACE web method for the given url
-     * @param {string} url Endpoint for the TRACE request.
-     * @param {object} [requestOptions] Request object @see https://developer.mozilla.org/en-US/docs/Web/API/Request
-     * @returns {Promise}
-     * 
-     * Note: Included only for completeness. There are potential security exploits with this web method and its
-     * general use is discouraged.
-     * @link https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
-     */
-    trace(url, requestOptions)
+/**
+ * Note: Included only for completeness. 
+ * There are potential security exploits with this web method and its general use is discouraged.
+ * @link https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
+ */
+trace<T>(url: string, requestOptions?: RequestInit): Promise<T>
 ```
 
 ## Why use Frak and what is with the name Frak?
 
-One does not simply use [`fetch()`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) directly.
-Actually you can use `fetch()` directly, but with Frak you get these features:
+You can of course use [`fetch()`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) directly, but with Frak you get these features:
 
 Frak exposes all valid [HTTP verbs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods) as a method that takes sane arguments:
 
-`Frak.post('https://some.com/endpoint', {"my": "JSON"});`
+`frak.post('https://some.com/endpoint', {"my": "JSON"});`
 
-`Frak.patch('https://example.com/endpoint', {"my": "JSON"});`
+`frak.patch('https://example.com/endpoint', {"my": "JSON"});`
 
-`Frak.get('https://example.com/endpoint?count=10');`
+`frak.get('https://example.com/endpoint?count=10');`
 
-Frak is a class that specifically targets a JSON request/response scenario.
+Frak specifically targets a JSON request/response scenario.
+
 If you need to deal with XML or some other data format then Frak is probably **not** a good fit in these situations.
 
-The name Frak is a nod in the direction of [Battlestar Galatica](https://en.wikipedia.org/wiki/Frak_(expletive)).
+The name Frak is a nod to [Battlestar Galatica](https://en.wikipedia.org/wiki/Frak_(expletive)).
 The developer of Frak found himself saying "What the frak?!?" over and over especially when it came to dealing with
 the [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) insanity.
 
 __If you are detecting some personal annoyance at CORS by the developer of Frak you are correct.__
 
-Note: Frak works really well with the [Slim Framework](https://www.slimframework.com) and is the primary reason that
-      Frak exists in the first place. (Not to say that Frak will not work well with other server side web services)
+Note: Frak works really well with the [Slim](https://www.slimframework.com) and [Willow](https://www.notion.so/Willow-Framework-Users-Guide-bf56317580884ccd95ed8d3889f83c72) frameworks. 
+(Not to say that Frak will not work well with other server side web services)
 
 ## Contributing
 
