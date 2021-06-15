@@ -1,3 +1,5 @@
+// noinspection JSValidateJSDoc
+
 type HTTPMethods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'CONNECT' | 'TRACE';
 type RequestWithBody = <T>(uri: string, body: any, request?: RequestInit) => Promise<T>
 type RequestWithoutBody = <T>(uri: string, request?: RequestInit) => Promise<T>
